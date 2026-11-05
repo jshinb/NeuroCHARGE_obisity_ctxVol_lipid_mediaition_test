@@ -1,10 +1,9 @@
 #*****************************************************************************#
 #
-# 03_mediation_analysis.R: 
+# 03_mediation_analysis_baseModel.R: 
 # Perform mediation tests: Adiposity -> Lipids -> Brain
 # 
 #*****************************************************************************#
-
 starting.message=paste0("\n",'03_mediation_analysis_baseModel.R: ',"Started mediation tests. \n\n")
 message(starting.message)
 cat(starting.message,file=logfile00,append=T)
@@ -66,8 +65,8 @@ adj_lipid <- adjust_metabolites(
     analysis_data,
     select=intersect(
       names(analysis_data),c("ID",'age_metabo','age_diff','age_diff2','sex',lipids)
-      )
-    ), 
+    )
+  ), 
   lipids = lipids, 
   age_col = "age_metabo",# 
   sex_col = "sex",
@@ -117,47 +116,60 @@ task_grid <- expand.grid(
   stringsAsFactors = FALSE
 )
 
-# 3. Run loop
-require(pbapply)
-
 # Force warnings to stay "buffered" so the handler can catch them properly
 options(warn = 0) 
 
 log_file <- file.path(outdir, "mediation_warnings_baseModel.log")
 write(paste("Mediation Analysis Log - Started:", Sys.time()), file = log_file)
 
-t0=1;t1=nrow(task_grid)
-final_results_list <- pblapply(c(t0:t1), function(i) {
+t0=1; t1=nrow(task_grid)
+
+# ===== CLUSTER SETUP =====
+require(parallel)
+
+# Create cluster (adjust number of cores as needed)
+n_cores <- as.numeric(Sys.getenv("SLURM_CPUS_PER_TASK", detectCores() - 1))
+cl <- makeCluster(n_cores, type = "PSOCK")
+
+# Export all required objects to cluster nodes
+clusterExport(cl, c(
+  "adjusted_data", 
+  "task_grid",
+  "opt",
+  "run_single_mediation_fast",
+  "log_file",
+  "t0",
+  "t1"
+), envir = environment())
+
+# Load required packages on each node
+clusterEvalQ(cl, {
+  require(dplyr)
+  require(mediation)
+  require(lmerTest)
+  require(lme4)
+})
+
+# ===== PARALLEL LOOP =====
+final_results_list <- parLapply(cl, c(t0:t1), function(i) {
   task <- task_grid[i, ]
   
   # Use withCallingHandlers for BOTH warnings and messages
   withCallingHandlers(
     {
-      # run_single_mediation(
       run_single_mediation_fast(
         data=adjusted_data, 
         exp_var = paste0(task$x_name, ".adjSex"), 
         med_var = task$lipid, 
         out_var = paste0(task$y_name, ".adjSex"), 
         covars = NULL,
-        mode = "screen", #c("screen", "mediate", "both"),
-        X_label = task$x_name, #NULL, 
-        Y_label = task$y_name, #NULL,
+        mode = "screen",
+        X_label = task$x_name, 
+        Y_label = task$y_name,
         sims = 500,
         do.boot = FALSE,
         is.family.data = opt$is.family.data
       )
-      # run_single_mediation_mediate(
-      #   data    = adjusted_data,
-      #   exp_var = paste0(task$x_name, ".adjSex"),
-      #   med_var = task$lipid,
-      #   out_var = paste0(task$y_name, ".adjSex"),
-      #   covars  = NULL,
-      #   sims    = 100,# Start with 100 for screening, increase for final
-      #   X_label = task$x_name,
-      #   Y_label = task$y_name,
-      #   is.family.data = opt$is.family.data
-      # )
     },
     # Handle Warnings
     warning = function(w) {
@@ -176,10 +188,15 @@ final_results_list <- pblapply(c(t0:t1), function(i) {
   )
 })
 
+# Stop cluster
+stopCluster(cl)
+
 # 4. Clean and Save
 final_df <- bind_rows(final_results_list)
 resfile = file.path(outdir,"mediation_results_summary_baseModel.txt")
 write_tsv(final_df, resfile)
+
+capture.output(summary(warnings()),file=logfile00,append=T)
 
 ending.message=paste0("\n",'03_mediation_analysis_baseModel.R: ',"Analysis complete. Results saved to output directory. \n\n")
 message(ending.message); cat(ending.message,"\n",file=logfile00,append=T)
