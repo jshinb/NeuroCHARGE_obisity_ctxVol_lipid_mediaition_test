@@ -32,32 +32,21 @@ session_info(to_file = logfile00)
 cat("Prep: sourcing functions\n")
 source("01_prepare_data_stage2.R")
 
-#======================@
-#--- [REMOVE LATER] ---# 
+#--- [REMOVE LATER] 
 df_all$waist = df_all$BMI
 df_all$WHR = df_all$BMI
 df_all$ancestry = sample(c("EUR","EAS"),size = nrow(df_all),replace = T)
 table(df_all$ancestry)
-#======================@
 
-# --- Primary analyses ---
-# Primary analyses: pooled analyses of non-underweight dividuals at midlife
+# --- ANALYSES ---
+#* [Pooled analyses of non-underweight individuals at midlife]
 source("A1_pooled_mediation_test.R")
 
-# Secondary analyses
 #* [APOE4-stratified analyses of non-underweight individuals at midlife]
-# source('04_APOE4_str_mediation_analysis.R')
-str_mediation_test(
-  data = df_all%>% filter(is.underweight=="No",age.group=="(34,65]_(34,65]"),
-  str.var = "APOE4",
-  str.var.name = "APOE4.present",
-  cov_cohort_specific=cov_cohort_specific,
-  cov_additional = cov_additional,
-  is.family.data = opt$is.family.data,
-  logfile.name='04_APOE4_str_mediation_analysis.log'
-  )
+source("A2_stratified_mediation_test.R")
 
-#* [Age-stratified analyses of non-underweight individuals]
+#### WORK FROM HERE: THINK - each set of analyses can be performed parallely ####
+#* [Age-group-stratified analyses of non-underweight individuals]
 # source('04_Age_str_mediation_analysis.R')
 str_mediation_test(
   data=df_all %>% filter(is.underweight=="No"),
