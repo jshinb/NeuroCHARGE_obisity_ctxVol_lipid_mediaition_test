@@ -16,7 +16,7 @@ if(nrow(analysis_data) < 30){
   next
 }
 
-#* remove variables that are 100% missing in the merged dataset
+#* remove variables that are 100% missing in the merged dataset ----
 data_missing <- colSums(is.na(analysis_data))
 if(any(data_missing == nrow(analysis_data))){
   print(names(analysis_data)[data_missing == nrow(analysis_data)])
@@ -169,43 +169,41 @@ cormM = cor(subset(analysis_data,sex=="M",select=setdiff(names(analysis_data),c(
 cor_list = list(corm=corm, cormF=cormF, cormM=cormM)
 save(cor_list,file=file.path(outdir,'correlation_matrices_continuous_variables.Rdata'))
 
-# scatter plots with correlation ----------------------------------------------
+# scatter plots with correlation ----
 dA=subset(analysis_data,select=c( 
   setdiff(intersect(names(non.neuro),names(analysis_data)),c('ID',"FID",missingCol)), "ICV"))
+
+## sex-combined
 png(file.path(outdir,"correlation_pairwise_scatter.png"),
     width=22,height=22,units="in",res=300)
-suppressWarnings({
-  pairs.panels(data.frame(dA,stringsAsFactors = F), 
-               method = "pearson", # correlation method
-               hist.col = "#BEBEBE33",
-               density = TRUE,  # show density plots
-               ellipses = TRUE # show correlation ellipses
-  )})
+pairs.panels(data.frame(dA,stringsAsFactors = F), 
+             method = "pearson", # correlation method
+             hist.col = "#BEBEBE33",
+             density = TRUE,  # show density plots
+             ellipses = TRUE) # show correlation ellipses
 dev.off()
 
+## females
 png(file.path(outdir,"correlation_pairwise_scatter_Female.png"),
     width=22,height=22,units="in",res=300)
-suppressWarnings({
-  pairs.panels(data.frame(subset(dA,sex=="F"),stringsAsFactors = F), 
-               method = "pearson", # correlation method
-               hist.col = "#8B000033",
-               density = TRUE,  # show density plots
-               ellipses = TRUE # show correlation ellipses
-  )})
+pairs.panels(data.frame(subset(dA,sex=="F"),stringsAsFactors = F), 
+             method = "pearson", # correlation method
+             hist.col = "#8B000033",
+             density = TRUE,  # show density plots
+             ellipses = TRUE) # show correlation ellipses
 dev.off()
 
+## males
 png(file.path(outdir,"correlation_pairwise_scatter_Male.png"),
     width=22,height=22,units="in",res=300)
-suppressWarnings({
-  pairs.panels(data.frame(subset(dA,sex=="M"),stringsAsFactors = F), 
-               method = "pearson", # correlation method
-               hist.col = "#00008B33",
-               density = TRUE,  # show density plots
-               ellipses = TRUE # show correlation ellipses
-  )})
+pairs.panels(data.frame(subset(dA,sex=="M"),stringsAsFactors = F), 
+             method = "pearson", # correlation method
+             hist.col = "#00008B33",
+             density = TRUE,  # show density plots
+             ellipses = TRUE) # show correlation ellipses
 dev.off()
 
-# characteristic tables -------------------------------------------------------
+# characteristic tables ----
 # 
 tab_vars = setdiff(c(names(analysis_data)),c("ID","FID"))
 tableOne_All <- CreateTableOne(vars = tab_vars,
@@ -240,21 +238,20 @@ if(length(table(analysis_data$age.group, useNA = "ifany"))>1){
 }else{
   message("\n02_get_desc_statistics_stage2.R: Only one age-group exisits.\n")
 }
-
 save(tableOne_All,
      file=file.path(outdir,
                     "characteristic_table.RData"))
 save(tableOne_sex_str,
      file=file.path(outdir,
                     "characteristic_table_sex_stratified.RData"))
-
 # generate histograms
 generate_histograms(outdir = outdir ,
                     metabo_OUT,
                     metabo_missing_zero_info, 
-                    metabo_columns = names(metabo_OUT) )
+                    metabo_columns = names(metabo_OUT))
 
 # ending ----
+capture.output(summary(warnings()), file=logfile00,append=T)
 ending.message = paste0("\n",'02_get_desc_statistics_stage2.R: ',"Finished obtaining descriptive statistics. \n\n")
 message(ending.message,sep='')
 cat(ending.message,sep='',file=logfile00,append=T)
