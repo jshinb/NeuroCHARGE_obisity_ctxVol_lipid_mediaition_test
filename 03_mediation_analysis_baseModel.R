@@ -128,7 +128,10 @@ t0=1; t1=nrow(task_grid)
 require(parallel)
 
 # Create cluster (adjust number of cores as needed)
-n_cores <- as.numeric(Sys.getenv("SLURM_CPUS_PER_TASK", detectCores() - 1))
+### CHANGED to be more robust
+# n_cores <- as.numeric(
+#   Sys.getenv("SLURM_CPUS_PER_TASK", detectCores() - 1))
+n_cores <- 4L
 cl <- makeCluster(n_cores, type = "PSOCK")
 
 # Export all required objects to cluster nodes
@@ -139,7 +142,8 @@ clusterExport(cl, c(
   "run_single_mediation_fast",
   "log_file",
   "t0",
-  "t1"
+  "t1",
+  "inormal"
 ), envir = environment())
 
 # Load required packages on each node
