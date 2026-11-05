@@ -618,7 +618,7 @@ generate_histograms <- function(outdir,metabo_OUT,metabo_missing_zero_info,metab
             plot.title=element_text(size=9, face="bold"))
     nvars <- length(temp_vars[which(!is.na(temp_vars))])
     h <- ifelse(nvars<11, 2.1, ifelse(nvars>=11 & nvars<21, 3.2, ifelse(nvars>=21 & nvars<31, 4.3, ifelse(nvars>=31 & nvars<41, 5.4, ifelse(nvars>=41 & nvars<51, 6.5, ifelse(nvars>=51, 7.6, NA))))))
-    ggsave(file.path(outdir,"plots",paste0("histo",i,".pdf")), myplot, width=15, height=h)
+    ggsave(file.path(outdir,"plots",paste0("histo",i,".pdf")), plot = myplot, width=15, height=h)
     print(paste("variables",l, "-",(l+59),"done")) ; i=i+1  
   }
 }#generate_histograms

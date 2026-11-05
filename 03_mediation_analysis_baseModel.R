@@ -200,7 +200,5 @@ final_df <- bind_rows(final_results_list)
 resfile = file.path(outdir,"mediation_results_summary_baseModel.txt")
 write_tsv(final_df, resfile)
 
-capture.output(summary(warnings()),file=logfile00,append=T)
-
 ending.message=paste0("\n",'03_mediation_analysis_baseModel.R: ',"Analysis complete. Results saved to output directory. \n\n")
 message(ending.message); cat(ending.message,"\n",file=logfile00,append=T)
