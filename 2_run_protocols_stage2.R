@@ -32,53 +32,17 @@ session_info(to_file = logfile00)
 cat("Prep: sourcing functions\n")
 source("01_prepare_data_stage2.R")
 
-#--- [REMOVE LATER] 
+#======================@
+#--- [REMOVE LATER] ---# 
 df_all$waist = df_all$BMI
 df_all$WHR = df_all$BMI
 df_all$ancestry = sample(c("EUR","EAS"),size = nrow(df_all),replace = T)
 table(df_all$ancestry)
-###
-# m1=which(names(df_all)=='XXL_VLDL_P')
-# df_all.org = df_all
-# df_all = df_all.org %>% select(1:(m1-1)) %>% bind_cols(df_all %>% select(c((m1+301):(m1+302))))
+#======================@
 
 # --- Primary analyses ---
 # Primary analyses: pooled analyses of non-underweight dividuals at midlife
-#* [Pooled analyses of non-underweight individuals at midlife]
-
-analysis_data=df_all %>% filter(is.underweight=="No",age.group=="(34,65]_(34,65]");
-roi_list = roi.34;
-metabo_list = metaboID_ordered;
-cov_genoPC = genoPCs;
-cov_cohort_specific = cohort_specific_covs;
-cov_additional = cov_additional;
-outdir00 = outdir00;
-logfile = '04_pooled_mediation_analysis.log'
-
-## inside the function
-excluded_vars = rownames(analysis_data %>% psych::describe() %>% filter(sd==0))
-excluded_vars = c(excluded_vars,rownames(analysis_data %>% psych::describe() %>% filter(is.na(sd))))
-analysis_data = subset(analysis_data,select=unique(c("ID","FID",setdiff(names(analysis_data),excluded_vars))))
-
-# pooled_mediation_test(
-#   analysis_data=df_all %>% filter(is.underweight=="No",age.group=="(34,65]_(34,65]"), 
-#   roi_list = roi.34,
-#   metabo_list = metaboID_ordered, 
-#   cov_genoPC = genoPCs, #FIXED - c("genoPC1","genoPC2"), 
-#   cov_cohort_specific = cohort_specific_covs, #FIXED 
-#   cov_additional = cov_additional,#FIXED
-#   outdir00 = outdir00, 
-#   logfile = '04_pooled_mediation_analysis.log' )
-# 
-pooled_mediation_test(
-    data = df_all %>% filter(is.underweight=="No",age.group=="(34,65]_(34,65]"),
-    analysis.type = 'primary',# c("primary","primary_all",'adjEthnicity')
-    logfile.name = '04_pooled_mediation_analysis.log',
-    cov_cohort_specific=cov_cohort_specific,
-    cov_additional = cov_additional,
-    is.family.data = opt$is.family.data,
-    roi.34 = roi.34,
-    group = 'pooled')
+source("A1_pooled_mediation_test.R")
 
 # Secondary analyses
 #* [APOE4-stratified analyses of non-underweight individuals at midlife]
