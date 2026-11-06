@@ -21,7 +21,7 @@ Additional covariates:
 * Estimated glomerular filtration rate, eGFR (mL/min per 1.73 m2)
 https://www.niddk.nih.gov/health-information/communication-programs/nkdep/laboratory-evaluation/glomerular-filtration-rate-calculators 
 
-* base covariates: all considered in stage 1 + metabolomic-specific covariates (
+* base covariates: all considered in stage 1 + metabolomic-specific covariates
 * additional covariates: all considered in stage 1 + metabolomic-specific covariates
 <img width="842" height="223" alt="image" src="https://github.com/user-attachments/assets/dc3972da-5d5c-4fc0-bac9-a7756fe7dc8e" />
 <img width="846" height="133" alt="image" src="https://github.com/user-attachments/assets/f090393c-1a6e-4119-8923-26ec96e83932" />
