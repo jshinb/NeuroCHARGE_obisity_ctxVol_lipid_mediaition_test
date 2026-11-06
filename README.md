@@ -33,3 +33,4 @@ Additional covariates:
 <img width="842" height="223" alt="image" src="https://github.com/user-attachments/assets/dc3972da-5d5c-4fc0-bac9-a7756fe7dc8e" />
 <img width="846" height="133" alt="image" src="https://github.com/user-attachments/assets/f090393c-1a6e-4119-8923-26ec96e83932" />
 
+<img width="425" height="76" alt="image" src="https://github.com/user-attachments/assets/dbd8e3b9-8cc0-490e-8e47-4bc2894d4e7d" />
