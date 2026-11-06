@@ -12,13 +12,13 @@ Lipid ~ Obesity + base covariates + (additional covariates)
 Brain ~ Obesity + Lipid + base covariates + (additional covariates)
 
 Metabolite-specific covariates
-• ‘Years’: years between brain MRI and blood drawing for metabolomic analysis
-• ‘Fasting duration’: hours between the last meal and blood draw for metabolomic analysis (if available)
-• Cohort specific covariates: e.g.,batch, etc. 
+* Years: years between brain MRI and blood drawing for metabolomic analysis
+* Fasting duration: hours between the last meal and blood draw for metabolomic analysis (if available)
+* Cohort specific covariates: e.g.,batch, etc. 
 
 Additional covariates:
-• Statin treatment (yes/no)
-• Estimated glomerular filtration rate, eGFR (mL/min per 1.73 m2)
+* Statin treatment (yes/no)
+* Estimated glomerular filtration rate, eGFR (mL/min per 1.73 m2)
 https://www.niddk.nih.gov/health-information/communication-programs/nkdep/laboratory-evaluation/glomerular-filtration-rate-calculators 
 
 base covariates: all considered in stage 1 + metabolomic-specific covariates (
