@@ -136,9 +136,9 @@ metaboID_ordered = names(metabo_all)[!names(metabo_all) %in% c("ID",'FID')]
 
 #do.I.need <- function(# do I need to merge? - Yes for using the previous script as much as possible
 # Assumption - data are cleaned
-cov_metabo = c('age_metabo','statin_use','othermed_use','eGFR')#required
+cov_metabo = c('age_metabo','fasting_duration')#required
 cov_genoPC = names(non.neuro_all)[str_detect(names(non.neuro_all),"genoPC")]
-cov_additional = c('current_smoking','hypertension','T2D','eGFR')##
+cov_additional = c('current_smoking','hypertension','T2D','statin_use','othermed_use','eGFR')##
 cov_cohort_specific = setdiff(names(non.neuro_all),
                               c(non.neuro_required_colnames,cov_genoPC,cov_metabo))
 
