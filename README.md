@@ -12,7 +12,7 @@ Lipid ~ Obesity + base covariates + (additional covariates)
 Brain ~ Obesity + Lipid + base covariates + (additional covariates)
 
 Metabolite-specific covariates
-* Years: years between brain MRI and blood drawing for metabolomic analysis
+* Age at blood sampling 
 * Fasting duration: hours between the last meal and blood draw for metabolomic analysis (if available)
 * Cohort specific covariates: e.g.,batch, etc. 
 
