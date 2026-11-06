@@ -1,3 +1,5 @@
+# To-fix:
+Add - fasting duration in the base model for metabolites: 
 # To-think
 1. Make presentation files
 2. Covariates for metabolites
